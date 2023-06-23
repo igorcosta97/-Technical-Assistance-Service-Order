@@ -3,6 +3,9 @@ import { prisma } from '../lib/prisma'
 import { z } from 'zod'
 
 export async function clientRoutes(app: FastifyInstance) {
+  app.addHook('preHandler', async (request) => {
+    await request.jwtVerify()
+  })
   // Listar todos os clientes
   app.get('/client', async () => {
     const response = await prisma.client.findMany({
@@ -37,13 +40,28 @@ export async function clientRoutes(app: FastifyInstance) {
       address: z.string(),
       district: z.string(),
       city: z.string(),
+      cep: z.string(),
       phoneNumber: z.string(),
-      cellNumber: z.string(),
     })
 
-    const { name, email, address, district, city, phoneNumber, cellNumber } =
+    const { name, email, address, district, city, cep, phoneNumber } =
       bodySchema.parse(request.body)
 
+    console.log(
+      name +
+        ' ' +
+        email +
+        ' ' +
+        address +
+        ' ' +
+        district +
+        ' ' +
+        city +
+        ' ' +
+        cep +
+        ' ' +
+        phoneNumber,
+    )
     const response = await prisma.client.create({
       data: {
         name,
@@ -51,8 +69,8 @@ export async function clientRoutes(app: FastifyInstance) {
         address,
         district,
         city,
+        cep,
         phoneNumber,
-        cellNumber,
       },
     })
     return response
@@ -72,11 +90,11 @@ export async function clientRoutes(app: FastifyInstance) {
       address: z.string(),
       district: z.string(),
       city: z.string(),
+      cep: z.string(),
       phoneNumber: z.string(),
-      cellNumber: z.string(),
     })
 
-    const { name, email, address, district, city, phoneNumber, cellNumber } =
+    const { name, email, address, district, city, cep, phoneNumber } =
       bodySchema.parse(request.body)
 
     const response = await prisma.client.update({
@@ -89,8 +107,8 @@ export async function clientRoutes(app: FastifyInstance) {
         address,
         district,
         city,
+        cep,
         phoneNumber,
-        cellNumber,
       },
     })
     return response
