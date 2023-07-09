@@ -4,6 +4,7 @@ import { clientRoutes } from './routes/clients'
 import { orderRoutes } from './routes/orders'
 import { authRoutes } from './routes/auth'
 import { userRoutes } from './routes/users'
+import { serviceRoute } from './routes/services'
 import jwt from '@fastify/jwt'
 
 const app = fastify()
@@ -12,6 +13,7 @@ app.register(authRoutes)
 app.register(userRoutes)
 app.register(clientRoutes)
 app.register(orderRoutes)
+app.register(serviceRoute)
 app.register(cors, {
   origin: true,
 })

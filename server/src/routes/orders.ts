@@ -16,10 +16,14 @@ export async function orderRoutes(app: FastifyInstance) {
     return response
   })
 
+  // Ordens Aprovadas
+  // Ordens Em Andamento
+  // Ordens Finalizadas
+
   // Ordem única
   app.get('/order/:id', async (request) => {
     const paramsSchema = z.object({
-      id: z.string(),
+      id: z.string().uuid(),
     })
     const { id } = paramsSchema.parse(request.params)
     const response = await prisma.order.findUniqueOrThrow({
