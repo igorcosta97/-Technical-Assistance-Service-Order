@@ -18,6 +18,7 @@ app.register(cors, {
 app.register(jwt, {
   secret: 'lskeieprepokfs3ds889494ieuueu3twuwuuwuedkkc',
 })
+
 app
   .listen({
     port: 3333,

@@ -4,7 +4,7 @@ import { z } from 'zod'
 import bcrypt from 'bcrypt'
 
 export async function authRoutes(app: FastifyInstance) {
-  app.post('/register', async (request) => {
+  app.post('/auth', async (request) => {
     const bodySchema = z.object({
       username: z.string(),
       password: z.string(),
@@ -31,7 +31,7 @@ export async function authRoutes(app: FastifyInstance) {
           },
           {
             sub: user.id,
-            expiresIn: '30 days',
+            expiresIn: '10 minutes',
           },
         )
         return { token }

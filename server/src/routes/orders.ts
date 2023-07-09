@@ -3,6 +3,9 @@ import { prisma } from '../lib/prisma'
 import { z } from 'zod'
 
 export async function orderRoutes(app: FastifyInstance) {
+  app.addHook('preHandler', async (request) => {
+    await request.jwtVerify()
+  })
   // Todas as ordens
   app.get('/order', async () => {
     const response = await prisma.order.findMany({
@@ -14,7 +17,6 @@ export async function orderRoutes(app: FastifyInstance) {
   })
 
   // Ordem única
-
   app.get('/order/:id', async (request) => {
     const paramsSchema = z.object({
       id: z.string(),
@@ -28,7 +30,7 @@ export async function orderRoutes(app: FastifyInstance) {
     return response
   })
 
-  // Criar Cliente
+  // Criar Order
   app.post('/order', async (request) => {
     const bodySchema = z.object({
       description: z.string(),
@@ -40,7 +42,6 @@ export async function orderRoutes(app: FastifyInstance) {
 
     const response = await prisma.order.create({
       data: {
-        ordemNumber: 2,
         description,
         status,
         clientId,
@@ -49,8 +50,8 @@ export async function orderRoutes(app: FastifyInstance) {
     return response
   })
 
-  // Editar Cliente
-  /* app.put('/order/:id', async (request) => {
+  // Editar Ordem
+  app.put('/order/:id', async (request) => {
     const paramsSchema = z.object({
       id: z.string().uuid(),
     })
@@ -58,49 +59,45 @@ export async function orderRoutes(app: FastifyInstance) {
     const { id } = paramsSchema.parse(request.params)
 
     const bodySchema = z.object({
-      name: z.string(),
-      email: z.string(),
-      address: z.string(),
-      district: z.string(),
-      city: z.string(),
-      phoneNumber: z.string(),
-      cellNumber: z.string(),
+      description: z.string(),
+      status: z.string(),
+      clientId: z.string().uuid(),
     })
 
-    const { name, email, address, district, city, phoneNumber, cellNumber } =
-      bodySchema.parse(request.body)
+    const { description, status, clientId } = bodySchema.parse(request.body)
 
-    const response = await prisma.client.update({
+    const response = await prisma.order.update({
       where: {
         id,
       },
       data: {
-        name,
-        email,
-        address,
-        district,
-        city,
-        phoneNumber,
-        cellNumber,
+        description,
+        status,
+        clientId,
       },
     })
     return response
   })
 
   // Deletar Cliente
-  app.delete('/client/:id', async (request) => {
+  app.delete('/order/:id', async (request) => {
     const paramsSchema = z.object({
       id: z.string().uuid(),
     })
 
     const { id } = paramsSchema.parse(request.params)
 
-    const response = await prisma.client.delete({
+    await prisma.service.deleteMany({
+      where: {
+        orderId: id,
+      },
+    })
+
+    const response = await prisma.order.delete({
       where: {
         id,
       },
     })
     return response
-  }) 
-  */
+  })
 }
