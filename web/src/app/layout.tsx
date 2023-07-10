@@ -3,10 +3,10 @@ import type { Metadata } from 'next'
 import {
   Roboto_Flex as Roboto,
   Bai_Jamjuree as BaiJamjuree,
-  Inter,
+  // Inter,
 } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+// const inter = Inter({ subsets: ['latin'] })
 const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto' })
 const baiJamjuree = BaiJamjuree({
   subsets: ['latin'],

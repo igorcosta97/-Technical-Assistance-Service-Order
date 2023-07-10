@@ -1,37 +1,37 @@
 'use client'
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import * as Form from '@radix-ui/react-form'
 import { KeyRound, UserCircle2 } from 'lucide-react'
 import { api } from '@/lib/api'
-import { NextRequest, NextResponse } from 'next/server'
+import { salvarCookies } from '@/utils/saveCookies'
 
-export default function LoginForm(request: NextRequest) {
+export default function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [notToken, setNotToken] = useState(false)
 
-  /* async function login() {
-    const responseAuth = await api.post('/auth', { username, password })
+  async function authForm(event: FormEvent) {
+    event.preventDefault()
+    const responseAuth = await api.post('/auth', {
+      username,
+      password,
+    })
     const { token } = responseAuth.data
-    console.log(token)
-    return token
-  } */
+
+    if (token) {
+      setNotToken(false)
+      salvarCookies(token)
+    } else {
+      setNotToken(true)
+    }
+  }
 
   return (
     <Form.Root
       className="w-[260px]"
-      onSubmit={async () => {
-        // event.preventDefault()
-        console.log(username)
-        console.log(password)
-        const responseAuth = await api.post('/auth', { username, password })
-        const { token } = responseAuth.data
-        console.log(token)
-
-        return NextResponse.redirect('http://localhost:3000/')
-        // login()
+      onSubmit={async (event) => {
+        authForm(event)
       }}
-      method="POST"
-      // action="/home"
     >
       <Form.Field className="mb-[10px] grid" name="username">
         <div className="flex items-baseline justify-between">
@@ -87,9 +87,18 @@ export default function LoginForm(request: NextRequest) {
             required
           />
         </Form.Control>
+        {notToken && (
+          <Form.Message className="py-2 text-[13px] text-white opacity-[0.8]">
+            O usuário ou senha informados não correspondem a um usuário
+            cadastrado!
+          </Form.Message>
+        )}
       </Form.Field>
       <Form.Submit asChild>
-        <button className="mt-[10px] box-border inline-flex h-[35px] w-full items-center justify-center rounded-[4px] bg-lime-900 px-[15px] font-medium leading-none text-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none">
+        <button
+          type="submit"
+          className="mt-[10px] box-border inline-flex h-[35px] w-full items-center justify-center rounded-[4px] bg-lime-900 px-[15px] font-medium leading-none text-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none"
+        >
           Login
         </button>
       </Form.Submit>
