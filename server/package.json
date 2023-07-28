@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "lint": "eslint src --ext .ts --fix"
+    "lint": "eslint src --ext .ts --fix",
+    "build": "tsup src",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +34,7 @@
     "fastify-passport": "^0.6.0",
     "fastify-secure-session": "^3.2.0",
     "passport-google-oauth20": "^2.0.0",
+    "tsup": "^7.1.0",
     "zod": "^3.21.4"
   }
 }

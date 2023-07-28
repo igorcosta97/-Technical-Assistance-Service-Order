@@ -32,6 +32,24 @@ export async function clientRoutes(app: FastifyInstance) {
     return response
   })
 
+  app.post('/client/name', async (request) => {
+    const bodySchema = z.object({
+      name: z.string(),
+    })
+
+    console.log(request.body)
+    const { name } = bodySchema.parse(request.body)
+
+    const response = await prisma.client.findMany({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+    })
+    return response
+  })
+
   // Criar Cliente
   app.post('/client', async (request) => {
     const bodySchema = z.object({
